@@ -1,4 +1,5 @@
 
+BUILD_VERSION ?= unknown
 # Image URL to use all building/pushing image targets
 IMG ?= btrace/kafka-topic-operator:latest
 # Produce CRDs that work back to Kubernetes 1.11 (no version conversion)
@@ -58,7 +59,7 @@ test: manifests generate fmt vet ## Run tests.
 ##@ Build
 
 build: generate fmt vet ## Build manager binary.
-	go build -o bin/manager main.go
+	go build -o bin/manager -ldflags "-X main.build=${BUILD_VERSION}" main.go
 
 run: manifests generate fmt vet ## Run a controller from your host.
 	go run ./main.go

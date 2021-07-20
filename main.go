@@ -18,6 +18,7 @@ package main
 
 import (
 	"flag"
+	"fmt"
 	"os"
 
 	// Import all Kubernetes client auth plugins (e.g. Azure, GCP, OIDC, etc.)
@@ -37,8 +38,9 @@ import (
 )
 
 var (
-	scheme   = runtime.NewScheme()
-	setupLog = ctrl.Log.WithName("setup")
+	buildVersion = "unknown"
+	scheme       = runtime.NewScheme()
+	setupLog     = ctrl.Log.WithName("setup")
 )
 
 func init() {
@@ -115,6 +117,7 @@ func main() {
 	}
 
 	setupLog.Info("starting manager")
+	setupLog.Info(fmt.Sprintf("build version: %s", buildVersion))
 	if err := mgr.Start(ctrl.SetupSignalHandler()); err != nil {
 		setupLog.Error(err, "problem running manager")
 		os.Exit(1)

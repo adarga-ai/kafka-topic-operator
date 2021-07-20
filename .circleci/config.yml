@@ -29,8 +29,7 @@ jobs:
     executor: default
     steps:
       - checkout
-      - setup_remote_docker:
-          docker_layer_caching: true
+      - setup_remote_docker
       - run:
           name: Install AWS CLI
           command: curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip" && unzip awscliv2.zip && ./aws/install -i ~/.local/aws-cli -b ~/.local/bin
@@ -39,7 +38,7 @@ jobs:
           command: aws ecr get-login-password | docker login --username AWS --password-stdin $AWS_ECR_ACCOUNT_URL
       - run:
           name: Docker Build commit tag
-          command: IMG=$AWS_ECR_ACCOUNT_URL/adarga/$CIRCLE_PROJECT_REPONAME:$CIRCLE_SHA1 make docker-build
+          command: BUILD_VERSION=${CIRCLE_TAG:=$CIRCLE_BRANCH+$CIRCLE_SHA1} make docker-build
       - snyk/scan:
           project: '${CIRCLE_PROJECT_REPONAME}'
           docker-image-name: '$AWS_ECR_ACCOUNT_URL/adarga/$CIRCLE_PROJECT_REPONAME:$CIRCLE_SHA1'
@@ -56,8 +55,7 @@ jobs:
     executor: default
     steps:
       - checkout
-      - setup_remote_docker:
-          docker_layer_caching: true
+      - setup_remote_docker
       - run:
           name: Install AWS CLI
           command: curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip" && unzip awscliv2.zip && ./aws/install -i ~/.local/aws-cli -b ~/.local/bin
