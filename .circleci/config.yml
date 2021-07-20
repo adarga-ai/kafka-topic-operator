@@ -66,11 +66,11 @@ jobs:
           name: Docker Pull commit tag
           command: docker pull $AWS_ECR_ACCOUNT_URL/adarga/$CIRCLE_PROJECT_REPONAME:$CIRCLE_SHA1
       - run:
-          name: Docker Tag latest
-          command: docker tag $AWS_ECR_ACCOUNT_URL/adarga/$CIRCLE_PROJECT_REPONAME:$CIRCLE_SHA1 $AWS_ECR_ACCOUNT_URL/adarga/$CIRCLE_PROJECT_REPONAME:latest
+          name: Docker Tag release
+          command: docker tag $AWS_ECR_ACCOUNT_URL/adarga/$CIRCLE_PROJECT_REPONAME:$CIRCLE_SHA1 $AWS_ECR_ACCOUNT_URL/adarga/$CIRCLE_PROJECT_REPONAME:$CIRCLE_TAG
       - run:
-          name: Docker Push latest
-          command: docker push $AWS_ECR_ACCOUNT_URL/adarga/$CIRCLE_PROJECT_REPONAME:latest
+          name: Docker Push release
+          command: docker push $AWS_ECR_ACCOUNT_URL/adarga/$CIRCLE_PROJECT_REPONAME:$CIRCLE_TAG
 
 workflows:
   version: 2
@@ -89,6 +89,5 @@ workflows:
           requires:
             - build
           filters:
-            branches:
-              only:
-                - main
+            tags:
+              only: /^v.*/
