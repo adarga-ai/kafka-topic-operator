@@ -59,7 +59,7 @@ test: manifests generate fmt vet ## Run tests.
 ##@ Build
 
 build: generate fmt vet ## Build manager binary.
-	go build -o bin/manager -ldflags "-X main.build=${BUILD_VERSION}" main.go
+	go build -o bin/manager -ldflags "-X main.buildVersion=${BUILD_VERSION}" main.go
 
 run: manifests generate fmt vet ## Run a controller from your host.
 	go run ./main.go
