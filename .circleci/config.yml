@@ -70,7 +70,7 @@ jobs:
           command: docker tag $AWS_ECR_ACCOUNT_URL/adarga/$CIRCLE_PROJECT_REPONAME:$CIRCLE_SHA1 $AWS_ECR_ACCOUNT_URL/adarga/$CIRCLE_PROJECT_REPONAME:${CIRCLE_TAG:=$CIRCLE_BRANCH}
       - run:
           name: Docker Push release
-          command: docker push $AWS_ECR_ACCOUNT_URL/adarga/$CIRCLE_PROJECT_REPONAME:$CIRCLE_TAG
+          command: docker push $AWS_ECR_ACCOUNT_URL/adarga/$CIRCLE_PROJECT_REPONAME:${CIRCLE_TAG:=$CIRCLE_BRANCH}
 
 workflows:
   version: 2
@@ -83,6 +83,9 @@ workflows:
           context:
             - adarga-global
             - adarga-operations-ecr
+          filters:
+            tags:
+              only: /^\d+\.\d+\.\d+$/
       - tag_promote:
           context:
             - adarga-operations-ecr
@@ -90,6 +93,6 @@ workflows:
             - build
           filters:
             tags:
-              only: /^v.*/
+              only: /^\d+\.\d+\.\d+$/
             branches:
               only: main
