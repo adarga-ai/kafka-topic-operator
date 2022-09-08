@@ -53,3 +53,4 @@ spec:
             memory: 512Mi
       serviceAccountName: controller-manager
       terminationGracePeriodSeconds: 10
+
