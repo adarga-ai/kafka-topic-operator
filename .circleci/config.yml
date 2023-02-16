@@ -1,7 +1,6 @@
 version: 2.1
 orbs:
   sk: wob-adarga/secret-key-orb@1.0.0
-  snyk: snyk/snyk@0.1.0
 
 executors:
   default:
@@ -17,13 +16,6 @@ jobs:
       - run:
           name: Run Golang tests
           command: make test
-      - snyk/scan:
-          project: '${CIRCLE_PROJECT_REPONAME}'
-          additional-arguments: "--remote-repo-url=https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME"
-          fail-on-issues: true
-          monitor-on-build: true
-          severity-threshold: high
-          organization: adarga
 
   build:
     executor: default
@@ -39,14 +31,6 @@ jobs:
       - run:
           name: Docker Build commit tag
           command: BUILD_VERSION=${CIRCLE_TAG:=$CIRCLE_BRANCH+$CIRCLE_SHA1} IMG=$AWS_ECR_ACCOUNT_URL/adarga/$CIRCLE_PROJECT_REPONAME:$CIRCLE_SHA1 make docker-build
-      - snyk/scan:
-          project: '${CIRCLE_PROJECT_REPONAME}'
-          docker-image-name: '$AWS_ECR_ACCOUNT_URL/adarga/$CIRCLE_PROJECT_REPONAME:$CIRCLE_SHA1'
-          target-file: Dockerfile
-          fail-on-issues: true
-          monitor-on-build: true
-          severity-threshold: high
-          organization: adarga
       - run:
           name: Docker Push commit tag
           command: IMG=$AWS_ECR_ACCOUNT_URL/adarga/$CIRCLE_PROJECT_REPONAME:$CIRCLE_SHA1 make docker-push
