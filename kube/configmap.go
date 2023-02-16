@@ -10,9 +10,14 @@ import (
 
 // NewConfigmap returns a pointer to ConfigMap created using KafkaTopic config
 func NewConfigmap(kt v1alpha1.KafkaTopic) (*v1.ConfigMap, error) {
-	labels := map[string]string{
-		"managed-by": "kafkaTopic-operator",
+	labels := map[string]string{}
+
+	// Add a managed-by label only if it does not exist already in the KafkaTopic 
+	_, managedByExists := kt.Labels["managed-by"]
+	if !managedByExists {
+		labels["managed-by"] = "kafkaTopic-operator"
 	}
+
 	data, err := data(kt)
 	if err != nil {
 		return &v1.ConfigMap{}, err

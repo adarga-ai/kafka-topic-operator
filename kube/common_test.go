@@ -1,8 +1,9 @@
 package kube
 
 import (
-	. "github.com/smartystreets/goconvey/convey"
 	"testing"
+
+	. "github.com/smartystreets/goconvey/convey"
 )
 
 func TestMergeMaps(t *testing.T) {
@@ -31,7 +32,7 @@ func TestMergeMaps(t *testing.T) {
 				"key2": "value2",
 			}
 			_, e := mergeMaps(m1, m2)
-			So(e, ShouldNotEqual, nil)
+			So(e.Error(), ShouldEqual, "duplicate key found: key1")
 		})
 	})
 }
