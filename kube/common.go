@@ -1,12 +1,14 @@
 package kube
 
-import "errors"
+import (
+	"fmt"
+)
 
 // mergeMaps returns the union of two maps
 func mergeMaps(m1, m2 map[string]string) (map[string]string, error) {
 	for k, v := range m1 {
 		if _, ok := m2[k]; ok {
-			return m2, errors.New("duplicate key found")
+			return m2, fmt.Errorf("duplicate key found: %s", k)
 		}
 		m2[k] = v
 	}
