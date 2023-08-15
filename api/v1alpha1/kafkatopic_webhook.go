@@ -109,7 +109,7 @@ func (r *KafkaTopic) validateKafkaTopicName() *field.Error {
 func (r *KafkaTopic) validateKafkaTopicSpec() *field.Error {
 	spec := field.NewPath("spec")
 	if !r.replicationFactorOkay() {
-		return field.Invalid(spec.Child("replicationFactor"), "replication-factor", "must be greater than 3")
+		return field.Invalid(spec.Child("replicationFactor"), "replication-factor", "must be greater than 0")
 	}
 	if !r.partitionsOkay() {
 		return field.Invalid(spec.Child("partitions"), "partitions", "must be greater than 0")
@@ -124,7 +124,7 @@ func (r *KafkaTopic) validateKafkaTopicSpec() *field.Error {
 }
 
 func (r *KafkaTopic) replicationFactorOkay() bool {
-	if r.Spec.ReplicationFactor >= 3 {
+	if r.Spec.ReplicationFactor > 0 {
 		return true
 	}
 	return false
